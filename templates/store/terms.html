@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service & Security | Electronical{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 6rem; max-width: 900px;">
+  <h1 style="font-size: 2.8rem; font-weight: 900; color: var(--text-dark); margin-bottom: 1.5rem;">Terms & Conditions</h1>
+  
+  <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 3rem; display: flex; flex-direction: column; gap: 2rem; color: var(--text-body); line-height: 1.8;">
+    <section>
+      <h2 style="color: var(--text-dark); font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;" id="privacy">1. Enterprise Security & Privacy</h2>
+      <p>
+        Electronical utilizes high-grade SSL/TLS encryption, session integrity, and strict CSRF protection on all transactions. Customer personal information and payment tokens are processed via certified PCI-compliant gateways.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="color: var(--text-dark); font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;" id="warranty">2. 2-Year Comprehensive Hardware Warranty</h2>
+      <p>
+        All consumer electronics, OLED panels, laptop motherboards, and smartwatches are covered with a direct 2-year replacement warranty against manufacturing defects and component failures.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="color: var(--text-dark); font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem;" id="shipping">3. Global Shipping & Fulfillment</h2>
+      <p>
+        Orders are processed with concurrency and real-time inventory tracking. Express air shipments are dispatched within 24 hours of payment verification.
+      </p>
+    </section>
+  </div>
+</div>
+{% endblock %}

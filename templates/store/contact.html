@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact & Support | Electronical{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 4rem; padding-bottom: 6rem; max-width: 1080px;">
+  <div style="text-align: center; margin-bottom: 3.5rem;">
+    <div style="color: var(--accent-cart-blue); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">We're Here For You</div>
+    <h1 style="font-size: 2.8rem; font-weight: 900; color: var(--text-dark);">Contact Customer Support</h1>
+    <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0.5rem auto 0;">
+      Have a question regarding hardware specifications, bulk enterprise purchases, warranty claims, or order tracking?
+    </p>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; align-items: start;">
+    <!-- Contact Info Card -->
+    <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 2.5rem;">
+      <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1.5rem;">Store Information</h3>
+      
+      <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+        <div style="display: flex; gap: 1rem;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: #EFF6FF; color: var(--accent-cart-blue); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">📍</div>
+          <div>
+            <strong style="color: var(--text-dark); display: block;">Headquarters</strong>
+            <span style="color: var(--text-muted); font-size: 0.95rem;">100 Enterprise Way, Silicon Valley, CA 94025</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: #EFF6FF; color: var(--accent-cart-blue); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">📞</div>
+          <div>
+            <strong style="color: var(--text-dark); display: block;">Phone Support</strong>
+            <span style="color: var(--text-muted); font-size: 0.95rem;">+1 (800) 932-8820 (Mon-Fri 8AM - 8PM EST)</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem;">
+          <div style="width: 44px; height: 44px; border-radius: 50%; background: #EFF6FF; color: var(--accent-cart-blue); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0;">✉️</div>
+          <div>
+            <strong style="color: var(--text-dark); display: block;">Email Inquiries</strong>
+            <span style="color: var(--text-muted); font-size: 0.95rem;">support@electronical.shop</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 2.5rem;">
+      <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1.5rem;">Send Us a Message</h3>
+
+      <form method="POST" action="{% url 'store:contact' %}">
+        {% csrf_token %}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem;">
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem;">Full Name</label>
+            <input type="text" name="name" required placeholder="John Doe" style="width: 100%; background: #F8FAFC; border: 1px solid var(--border-light); border-radius: 8px; padding: 0.75rem 1rem; color: #0F172A; outline: none;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem;">Email Address</label>
+            <input type="email" name="email" required placeholder="john@example.com" style="width: 100%; background: #F8FAFC; border: 1px solid var(--border-light); border-radius: 8px; padding: 0.75rem 1rem; color: #0F172A; outline: none;">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1.25rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem;">Subject</label>
+          <input type="text" name="subject" required placeholder="Question regarding warranty / product" style="width: 100%; background: #F8FAFC; border: 1px solid var(--border-light); border-radius: 8px; padding: 0.75rem 1rem; color: #0F172A; outline: none;">
+        </div>
+
+        <div style="margin-bottom: 1.75rem;">
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-dark); margin-bottom: 0.4rem;">Message</label>
+          <textarea name="message" rows="4" required placeholder="Provide details about your inquiry..." style="width: 100%; background: #F8FAFC; border: 1px solid var(--border-light); border-radius: 8px; padding: 0.75rem 1rem; color: #0F172A; outline: none; resize: vertical;"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-cta-orange" style="width: 100%;">
+          Send Inquiries Now 🚀
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shop Electronics Catalog | Electronical Nepal{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3.5rem; padding-bottom: 5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark);">
+        {% if current_category %}{{ current_category.name }}{% elif query %}Search results for "{{ query }}"{% else %}All Hardware Catalog{% endif %}
+      </h1>
+      <p style="color: var(--text-muted);">Showing {{ products.count }} flagship products in Nepal</p>
+    </div>
+
+    <!-- Sorting / Filtering Form -->
+    <form method="GET" style="display: flex; gap: 1rem; align-items: center;">
+      {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+      {% if current_category %}<input type="hidden" name="category" value="{{ current_category.slug }}">{% endif %}
+      
+      <select name="sort" onchange="this.form.submit()" style="background: #FFFFFF; color: var(--text-dark); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 0.65rem 1.25rem; outline: none; cursor: pointer; font-weight: 600; box-shadow: var(--shadow-sm);">
+        <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Latest Release</option>
+        <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+        <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+        <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Highest Rated</option>
+      </select>
+    </form>
+  </div>
+
+  <div class="catalog-layout-grid" style="display: grid; grid-template-columns: 260px 1fr; gap: 2.5rem;">
+    <!-- Sidebar Filters -->
+    <aside style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: 1.75rem; height: fit-content;">
+      <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">Categories</h3>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2rem;">
+        <li>
+          <a href="{% url 'store:product_list' %}" style="color: {% if not current_category %}var(--accent-cart-blue){% else %}var(--text-muted){% endif %}; font-weight: 700;">All Categories</a>
+        </li>
+        {% for cat in categories %}
+          <li>
+            <a href="{% url 'store:product_list' %}?category={{ cat.slug }}" style="color: {% if current_category.slug == cat.slug %}var(--accent-cart-blue){% else %}var(--text-muted){% endif %}; font-weight: 500;">
+              {{ cat.name }} ({{ cat.products.count }})
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <h3 style="font-size: 1.1rem; font-weight: 800; color: var(--text-dark); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-light); padding-bottom: 0.5rem;">Brands</h3>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.6rem;">
+        {% for brand in brands %}
+          <li>
+            <a href="{% url 'store:product_list' %}?brand={{ brand.id }}" style="color: {% if selected_brand == brand.id|stringformat:'s' %}var(--accent-cart-blue){% else %}var(--text-muted){% endif %}; font-weight: 500;">
+              {{ brand.name }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <!-- Product Grid -->
+    <div>
+      {% if products %}
+        <div class="product-grid">
+          {% for product in products %}
+            <div class="product-card">
+              {% if product.discount_price %}
+                <span class="sale-badge">🔥 -{{ product.discount_percent }}% OFF</span>
+              {% endif %}
+
+              <button class="wishlist-btn {% if product.id in wishlist_ids %}active{% endif %}" data-product-id="{{ product.id }}">
+                ❤️
+              </button>
+
+              <a href="{% url 'store:product_detail' product.slug %}" class="product-img-wrap">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+              </a>
+
+              <div class="product-info">
+                <div class="product-brand">{{ product.brand.name|default:product.category.name }}</div>
+                <a href="{% url 'store:product_detail' product.slug %}">
+                  <h3 class="product-title">{{ product.name }}</h3>
+                </a>
+                <div class="product-rating">
+                  ⭐ <strong>{{ product.rating }}</strong> <span>({{ product.review_count }})</span>
+                </div>
+
+                <div class="product-bottom">
+                  <div class="price-wrap">
+                    <span class="price-current">Rs. {{ product.current_price|floatformat:0 }}</span>
+                    {% if product.discount_price %}
+                      <span class="price-old">Rs. {{ product.price|floatformat:0 }}</span>
+                    {% endif %}
+                  </div>
+                  <form action="{% url 'store:add_to_cart' product.id %}" method="POST" style="margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-cart-blue">Add to Cart</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: 4rem; text-align: center;">
+          <h2 style="color: var(--text-dark);">No hardware found matching your filters.</h2>
+          <p style="color: var(--text-muted); margin: 1rem 0 2rem;">Try searching for another product or browse all categories.</p>
+          <a href="{% url 'store:product_list' %}" class="btn btn-cart-blue">Reset Filters</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gada Electronics | Premium Electronics & Home Appliances Nepal{% endblock %}
+
+{% block content %}
+<!-- Full-Screen Panoramic Hero Banner with Model Face & High-Tech Electronics Presentation -->
+<section class="hero-panoramic-full">
+  <div class="hero-banner-image-wrapper">
+    <!-- Unsplash dynamic high-res electronics showcase featuring model using pro headphones / tech gadgets with clear face view -->
+    <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=2400&q=95" alt="Gada Electronics Technology Showcase" class="hero-bg-img" style="object-position: 70% 30%;">
+    <div class="hero-subtle-overlay"></div>
+    
+    <div class="container" style="width: 100%;">
+      <div class="hero-content-layer">
+        <div class="hero-badge-tag">⚡ 2026 Next-Gen Flagships at Gada Electronics</div>
+        <h1 class="hero-main-title">
+          The Future of <span>Electronics</span> is Here.
+        </h1>
+        <p class="hero-subtitle-italic">
+          The Ultimate Destination For Flagships, Audio & Smart Home Appliances in Nepal
+        </p>
+        <div class="hero-actions-wrap">
+          <a href="{% url 'store:product_list' %}" class="btn btn-hero-solid">
+            SHOP NOW →
+          </a>
+          <a href="#flashSaleSection" class="btn btn-cta-orange">
+            🔥 Flash Deals
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Shop by Category Section (#FFFFFF Cards on #F8FAFC) -->
+<section class="container" style="margin-top: 5rem; margin-bottom: 5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+    <div>
+      <div style="color: var(--accent-cart-blue); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Hardware Catalog</div>
+      <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark);">Shop by Category</h2>
+    </div>
+    <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-cart-blue" style="background: transparent; color: var(--accent-cart-blue); border: 1px solid var(--accent-cart-blue);">View All Categories →</a>
+  </div>
+
+  <div class="category-grid">
+    {% for cat in categories %}
+      <a href="{% url 'store:product_list' %}?category={{ cat.slug }}" class="cat-item-card">
+        <div class="cat-icon-wrap">
+          {% if cat.slug == 'mobile-phones' %}📱
+          {% elif cat.slug == 'laptops' %}💻
+          {% elif cat.slug == 'televisions' %}📺
+          {% elif cat.slug == 'headphones' %}🎧
+          {% elif cat.slug == 'smartwatches' %}⌚
+          {% elif cat.slug == 'gaming' %}🎮
+          {% elif cat.slug == 'refrigerators' %}🧊
+          {% else %}⚡{% endif %}
+        </div>
+        <h4>{{ cat.name }}</h4>
+        <span style="font-size: 0.8rem; color: var(--text-muted);">{{ cat.products.count }} Products</span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Flash Sale Countdown Section -->
+<section class="container" id="flashSaleSection">
+  <div class="flash-sale-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2.5rem;">
+      <div>
+        <div style="color: var(--accent-cta-orange); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem;">⚡ Limited Period Offer</div>
+        <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark);">Flash Sale Countdown</h2>
+      </div>
+
+      <!-- Live Dynamic Countdown -->
+      <div class="timer-wrap">
+        <div class="timer-box">
+          <div class="timer-val" id="timerHours">14</div>
+          <div class="timer-lbl">Hours</div>
+        </div>
+        <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-cta-orange);">:</span>
+        <div class="timer-box">
+          <div class="timer-val" id="timerMinutes">30</div>
+          <div class="timer-lbl">Mins</div>
+        </div>
+        <span style="font-size: 1.5rem; font-weight: 800; color: var(--accent-cta-orange);">:</span>
+        <div class="timer-box">
+          <div class="timer-val" id="timerSeconds">00</div>
+          <div class="timer-lbl">Secs</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flash Sale Products Grid -->
+    <div class="product-grid">
+      {% for product in flash_sale_products %}
+        <div class="product-card">
+          <span class="sale-badge">🔥 -{{ product.discount_percent }}% OFF</span>
+          
+          <button class="wishlist-btn {% if product.id in wishlist_ids %}active{% endif %}" data-product-id="{{ product.id }}" title="Save to Wishlist">
+            ❤️
+          </button>
+
+          <a href="{% url 'store:product_detail' product.slug %}" class="product-img-wrap">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+          </a>
+
+          <div class="product-info">
+            <div class="product-brand">{{ product.brand.name|default:product.category.name }}</div>
+            <a href="{% url 'store:product_detail' product.slug %}">
+              <h3 class="product-title">{{ product.name }}</h3>
+            </a>
+            <div class="product-rating">
+              ⭐ <strong>{{ product.rating }}</strong> <span>({{ product.review_count }})</span>
+            </div>
+
+            <div class="product-bottom">
+              <div class="price-wrap">
+                <span class="price-current">Rs. {{ product.current_price|floatformat:0 }}</span>
+                {% if product.discount_price %}
+                  <span class="price-old">Rs. {{ product.price|floatformat:0 }}</span>
+                {% endif %}
+              </div>
+              <form action="{% url 'store:add_to_cart' product.id %}" method="POST" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-cart-blue">Add to Cart</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Trending Products Section -->
+<section class="container" style="margin: 5rem auto;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+    <div>
+      <div style="color: var(--accent-cart-blue); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Curated Hardware</div>
+      <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark);">Trending Flagships</h2>
+    </div>
+    <a href="{% url 'store:product_list' %}" class="btn btn-sm btn-cart-blue" style="background: transparent; color: var(--accent-cart-blue); border: 1px solid var(--accent-cart-blue);">Browse All →</a>
+  </div>
+
+  <div class="product-grid">
+    {% for product in trending_products %}
+      <div class="product-card">
+        {% if product.discount_price %}
+          <span class="sale-badge">SALE</span>
+        {% endif %}
+
+        <button class="wishlist-btn {% if product.id in wishlist_ids %}active{% endif %}" data-product-id="{{ product.id }}">
+          ❤️
+        </button>
+
+        <a href="{% url 'store:product_detail' product.slug %}" class="product-img-wrap">
+          <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">
+        </a>
+
+        <div class="product-info">
+          <div class="product-brand">{{ product.brand.name|default:product.category.name }}</div>
+          <a href="{% url 'store:product_detail' product.slug %}">
+            <h3 class="product-title">{{ product.name }}</h3>
+          </a>
+          <div class="product-rating">
+            ⭐ <strong>{{ product.rating }}</strong> <span>({{ product.review_count }})</span>
+          </div>
+
+          <div class="product-bottom">
+            <div class="price-wrap">
+              <span class="price-current">Rs. {{ product.current_price|floatformat:0 }}</span>
+              {% if product.discount_price %}
+                <span class="price-old">Rs. {{ product.price|floatformat:0 }}</span>
+              {% endif %}
+            </div>
+            <form action="{% url 'store:add_to_cart' product.id %}" method="POST" style="margin: 0;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-cart-blue">Add to Cart</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Featured Brands Showcase -->
+<section class="container" style="margin: 5rem auto;">
+  <div style="margin-bottom: 2rem;">
+    <div style="color: var(--accent-cart-blue); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Top Partnerships</div>
+    <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark);">Authorized Brand Partners</h2>
+  </div>
+  
+  <div class="brands-grid">
+    {% for brand in brands %}
+      <div class="brand-card-item">
+        {{ brand.name }}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Verified Customer Reviews Section -->
+<section class="container" style="margin: 5rem auto;">
+  <div style="margin-bottom: 2rem;">
+    <div style="color: var(--accent-cart-blue); font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">Client Satisfaction</div>
+    <h2 style="font-size: 2.2rem; font-weight: 800; color: var(--text-dark);">Customer Testimonials</h2>
+  </div>
+
+  <div class="review-grid">
+    {% for review in recent_reviews %}
+      <div class="review-card-white">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+          <div class="user-avatar-circle">{{ review.user_name|slice:":1" }}</div>
+          <div>
+            <div style="font-weight: 700; color: var(--text-dark);">{{ review.user_name }}</div>
+            <div style="font-size: 0.8rem; color: var(--accent-cart-blue);">Verified Buyer • on {{ review.product.name|truncatechars:24 }}</div>
+          </div>
+        </div>
+        <div style="color: #F59E0B; margin-bottom: 0.75rem;">
+          ★★★★★
+        </div>
+        <p style="color: var(--text-body); font-size: 0.95rem; font-style: italic;">
+          "{{ review.comment }}"
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

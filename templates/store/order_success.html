@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Order Confirmed | Electronical Nepal{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 5rem; padding-bottom: 7rem; text-align: center;">
+  <div style="background: #FFFFFF; border: 1px solid var(--border-light); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); max-width: 640px; margin: 0 auto; padding: 3.5rem 2.5rem;">
+    <div style="width: 80px; height: 80px; border-radius: 50%; background: #ECFDF5; border: 2px solid var(--accent-green); color: var(--accent-green); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 1.5rem;">
+      ✓
+    </div>
+
+    <h1 style="font-size: 2.2rem; font-weight: 900; color: var(--text-dark); margin-bottom: 0.75rem;">Order Placed Successfully!</h1>
+    <p style="color: var(--text-muted); font-size: 1.05rem; margin-bottom: 2rem;">
+      Thank you for purchasing with Electronical Nepal. Your digital invoice and delivery tracking have been registered.
+    </p>
+
+    <div style="background: #F8FAFC; border: 1px solid var(--border-light); border-radius: 8px; padding: 1.5rem; text-align: left; margin-bottom: 2.5rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span style="color: var(--text-muted);">Order Number:</span>
+        <strong style="color: var(--text-dark);">#{{ order.id }}</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span style="color: var(--text-muted);">Customer:</span>
+        <span style="color: var(--text-dark); font-weight: 600;">{{ order.full_name }}</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <span style="color: var(--text-muted);">Total Amount:</span>
+        <strong style="color: var(--accent-cart-blue); font-size: 1.15rem;">Rs. {{ order.total_amount|floatformat:0 }}</strong>
+      </div>
+      <div style="display: flex; justify-content: space-between;">
+        <span style="color: var(--text-muted);">Status:</span>
+        <span style="color: var(--accent-green); font-weight: 700;">{{ order.status }}</span>
+      </div>
+    </div>
+
+    <a href="{% url 'store:home' %}" class="btn btn-cart-blue">Return to Store</a>
+  </div>
+</div>
+{% endblock %}
